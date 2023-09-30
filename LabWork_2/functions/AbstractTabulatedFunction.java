@@ -1,6 +1,6 @@
 package functions;
 
-public abstract class AbstractTabulatedFunction {
+public abstract class AbstractTabulatedFunction implements TabulatedFunction {
 
     abstract protected int floorIndexOfX(double x);
 
