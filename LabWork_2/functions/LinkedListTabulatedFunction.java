@@ -1,7 +1,5 @@
 package functions;
 
-import java.util.*;
-
 public class LinkedListTabulatedFunction extends AbstractTabulatedFunction {
 
     class Node {
@@ -16,7 +14,7 @@ public class LinkedListTabulatedFunction extends AbstractTabulatedFunction {
     protected int count = 0;
     private Node head = null;
 
-    private LinkedListTabulatedFunction addNode(double x, double y){
+    private void addNode(double x, double y){
         Node newNode = new Node();
         newNode.x = x;
         newNode.y = y;
@@ -34,7 +32,6 @@ public class LinkedListTabulatedFunction extends AbstractTabulatedFunction {
             head.prev = newNode;
         }
         count++;
-        return this;
     }
     public LinkedListTabulatedFunction(double[] xValues, double[] yValues) {
         for (int i = 0; i < xValues.length;i++){
@@ -118,6 +115,21 @@ public class LinkedListTabulatedFunction extends AbstractTabulatedFunction {
         }
     };
 
+    protected Node floorNodeOfX(double x){
+        int index = 0;
+        while (index != count && getX(index) != x){
+            index++;
+        }
+        if(index != count) return getNode(index);
+        else{
+            int index_max = 0;
+            while(index_max != count && getX(index_max) < x){ index_max++; }
+            if (index_max == 0) return head;
+            if (index_max == count) return head.prev;
+            return getNode(--index_max);
+        }
+    }
+
     protected double extrapolateLeft(double x){
         if (count == 1) return head.y;
         double newY = head.y + (((head.next).y - head.y)/((head.next).x - head.x))*(x - head.x);
@@ -138,8 +150,10 @@ public class LinkedListTabulatedFunction extends AbstractTabulatedFunction {
     protected double interpolate(double x, int floorIndex){
 
         if (count == 1) return head.y;
-        double newY = getY(floorIndex) + ((getY(floorIndex + 1)-getY(floorIndex))/
-                (getX(floorIndex + 1)-getX(floorIndex)))*(x-getX(floorIndex));
+        double y_floor = getY(floorIndex);
+        double x_floor = getX(floorIndex);
+        double newY = y_floor + ((getY(floorIndex + 1) - y_floor)/
+                (getX(floorIndex + 1) - x_floor))*(x - x_floor);
 
         Node newNode = new Node();
         newNode.x = x; newNode.y = newY;
@@ -174,9 +188,11 @@ public class LinkedListTabulatedFunction extends AbstractTabulatedFunction {
         if (x<head.x) result = this.extrapolateLeft(x);
         else if(x > (head.prev).x) result = this.extrapolateRight(x);
         else {
-            int index = indexOfX(x);
-            if (index > 0) result = this.getY(index);
-            else result = this.interpolate(x, floorIndexOfX(x));
+            Node node = floorNodeOfX(x);
+            //int index = floorIndexOfX(x);
+            if (node.x == x) result = node.y;
+            //else result = this.interpolate(x, index);
+            else result = this.interpolate(x, node.x, (node.next).x,node.y,(node.next).y);
         }
         return result;
     }
