@@ -1,17 +1,6 @@
 package functions;
 
 public class LinkedListTabulatedFunction extends AbstractTabulatedFunction {
-
-    class Node {
-
-        public Node next;
-        public Node prev;
-
-        public double x;
-        public double y;
-    }
-
-    protected int count = 0;
     private Node head = null;
 
     private void addNode(double x, double y){
@@ -76,7 +65,9 @@ public class LinkedListTabulatedFunction extends AbstractTabulatedFunction {
     }
 
     // Методы из TabulatedFunction
-    public int getCount(){ return count; }
+    public int getCount() {
+        return count;
+    }
     public double getX(int index){ return getNode(index).x; };
     public double getY(int index){ return getNode(index).y; };
     public void setY(int index, double value){ getNode(index).y = value; };
@@ -182,16 +173,14 @@ public class LinkedListTabulatedFunction extends AbstractTabulatedFunction {
 
         return newY;
     };
-    @Override
-    public double apply(double x) {
+
+    public double apply_Node(double x) {
         double result;
         if (x<head.x) result = this.extrapolateLeft(x);
         else if(x > (head.prev).x) result = this.extrapolateRight(x);
         else {
             Node node = floorNodeOfX(x);
-            //int index = floorIndexOfX(x);
             if (node.x == x) result = node.y;
-            //else result = this.interpolate(x, index);
             else result = this.interpolate(x, node.x, (node.next).x,node.y,(node.next).y);
         }
         return result;
