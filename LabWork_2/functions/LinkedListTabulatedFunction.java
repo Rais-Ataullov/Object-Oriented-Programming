@@ -1,7 +1,7 @@
 package functions;
 
-public class LinkedListTabulatedFunction extends AbstractTabulatedFunction {
-
+public class LinkedListTabulatedFunction extends AbstractTabulatedFunction implements Insertable, Removable
+{
     private Node head = null;
 
     private void addNode(double x, double y){
@@ -143,6 +143,7 @@ public class LinkedListTabulatedFunction extends AbstractTabulatedFunction {
         newNode.next = getNode(floorIndex + 1);
         getNode(floorIndex).next = newNode;
         getNode(floorIndex + 1).prev = newNode;
+        count++;
         return newY;
     };
 
@@ -157,6 +158,7 @@ public class LinkedListTabulatedFunction extends AbstractTabulatedFunction {
         newNode.next = getNode(floorIndexOfX(x) + 1);
         getNode(floorIndexOfX(x)).next = newNode;
         getNode(floorIndexOfX(x) + 1).prev = newNode;
+        count++;
         return newY;
     };
     public double apply(double x) {
@@ -169,5 +171,44 @@ public class LinkedListTabulatedFunction extends AbstractTabulatedFunction {
             else result = this.interpolate(x, node.x, (node.next).x,node.y,(node.next).y);
         }
         return result;
+    }
+
+    @Override
+    public void insert(double x, double y) {
+        if (count == 0) this.addNode(x,y);
+        else {
+            if (x < leftBound()){
+                this.addNode(x,y);
+                head = head.prev;
+            }
+            else if (x > rightBound()){
+                this.addNode(x,y);
+            }
+            else{
+                int ind = indexOfX(x);
+                if(ind > 0){ this.setY(ind, y);}
+                else {
+                    Node newNode = new Node();
+                    newNode.x = x; newNode.y = y;
+                    newNode.prev = floorNodeOfX(x);
+                    newNode.next = floorNodeOfX(x).next;
+                    floorNodeOfX(x).next = newNode;
+                    (floorNodeOfX(x).next).prev = newNode;
+                    count++;
+                }
+            }
+        }
+    }
+
+    @Override
+    public void remove(int index) {
+        if (count > 0 && index >= 0 && index < count){
+            if (index == 0) head = head.next;
+
+            Node removeNode = getNode(index);
+            (removeNode.prev).next = removeNode.next;
+            (removeNode.next).prev = removeNode.prev;
+            removeNode.prev = null; removeNode.next = null;
+        }
     }
 }

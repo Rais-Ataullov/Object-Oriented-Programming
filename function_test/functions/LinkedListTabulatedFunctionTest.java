@@ -197,4 +197,37 @@ class LinkedListTabulatedFunctionTest {
         MathFunction super_TabComp_func = TabComp_func_2.andThen(TabComp_func_1);
         assertEquals(super_TabComp_func.apply(8.5), 11.820, 0.002);
     }
+
+    double[] arrayX_ = { 1,  2,    4,    8};
+    double[] arrayY_ = { 12, 3.5, -10.6, 0.23};
+    LinkedListTabulatedFunction Tab_Func = new LinkedListTabulatedFunction(arrayX_, arrayY_);
+    @Test
+    void insert(){
+
+        Tab_Func.insert(5, -4);
+        assertEquals(Tab_Func.indexOfX(5), 3);
+        assertEquals(Tab_Func.indexOfY(-4), 3);
+
+        //      { 1,  2,    4,      5,   8}
+        //      { 12, 3.5,  -10.6,  -4,  0.23}
+
+        Tab_Func.insert(10, 6.6);
+        assertEquals(Tab_Func.indexOfX(10), 5);
+        assertEquals(Tab_Func.indexOfY(6.6), 5);
+    }
+
+    @Test
+    void remove(){
+
+        Tab_Func.remove(2);
+        assertEquals(Tab_Func.getX(2), 8);
+        assertEquals(Tab_Func.getY(2), 0.23);
+
+        //      { 1,  2,    4,      8}
+        //      { 12, 3.5,  -10.6,  0.23}
+
+        Tab_Func.remove(0);
+        assertEquals(Tab_Func.leftBound(), 2);
+        assertEquals(Tab_Func.getY(0), 3.5);
+    }
 }
