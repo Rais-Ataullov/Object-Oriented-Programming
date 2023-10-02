@@ -1,9 +1,6 @@
 package functions;
 
 public class Node {
-    public Node next;
-    public Node prev;
-
-    public double x;
-    public double y;
+    public Node next, prev;
+    public double x, y;
 }
