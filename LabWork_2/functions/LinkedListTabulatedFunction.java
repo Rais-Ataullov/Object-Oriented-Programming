@@ -2,6 +2,11 @@ package functions;
 
 public class LinkedListTabulatedFunction extends AbstractTabulatedFunction implements Insertable, Removable
 {
+    private class Node {
+        public Node next, prev;
+        public double x, y;
+    }
+
     private Node head = null;
 
     private void addNode(double x, double y){
@@ -202,13 +207,14 @@ public class LinkedListTabulatedFunction extends AbstractTabulatedFunction imple
 
     @Override
     public void remove(int index) {
-        if (count > 0 && index >= 0 && index < count){
+        if (count > 0 && (index >= 0 && index < count)){
             if (index == 0) head = head.next;
 
             Node removeNode = getNode(index);
             (removeNode.prev).next = removeNode.next;
             (removeNode.next).prev = removeNode.prev;
             removeNode.prev = null; removeNode.next = null;
+            count--;
         }
     }
 }
