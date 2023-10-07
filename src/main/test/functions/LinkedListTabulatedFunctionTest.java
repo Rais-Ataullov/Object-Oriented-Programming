@@ -11,9 +11,23 @@ class LinkedListTabulatedFunctionTest {
     LinkedListTabulatedFunction TabFunc1 = new LinkedListTabulatedFunction(arrayX, arrayY);
 
     MathFunction source = new NaturalLogarithm();
-    double xFrom = 1; double xTo = 15; int count = 8;
+    double xFrom = 15; double xTo = 1; int count = 8;
     LinkedListTabulatedFunction TabFunc2 =
             new LinkedListTabulatedFunction(source, xFrom, xTo, count);
+
+    @Test
+    void testZero_interval(){
+        LinkedListTabulatedFunction tab_func =
+                new LinkedListTabulatedFunction(source, 4, 4,3);
+
+        assertEquals(tab_func.getX(0), 4);
+        assertEquals(tab_func.getX(1), 4);
+        assertEquals(tab_func.getX(2), 4);
+
+        assertEquals(tab_func.getY(0), 1.386);
+        assertEquals(tab_func.getY(1), 1.386);
+        assertEquals(tab_func.getY(2), 1.386);
+    }
 
     @Test
     void getCount() {
@@ -37,7 +51,7 @@ class LinkedListTabulatedFunctionTest {
         for (int i = 0; i < arrayX.length; i++){
             assertEquals(TabFunc1.getX(i), arrayX[i]); }
 
-        double temp = (xTo - xFrom)/(count-1);
+        double temp = Math.abs(xTo - xFrom)/(count-1);
         for (int i = 0; i < count; i++){
             assertEquals(TabFunc2.getX(i), 1 + temp * i);
         }
@@ -48,7 +62,7 @@ class LinkedListTabulatedFunctionTest {
         for (int i = 0; i < arrayY.length; i++){
             assertEquals(TabFunc1.getY(i), arrayY[i]); }
 
-        double temp = (xTo - xFrom)/(count-1);
+        double temp = Math.abs(xTo - xFrom)/(count-1);
         for (int i = 0; i < count; i++){
             assertEquals(TabFunc2.getY(i), Math.round(Math.log(1 + temp * i) * 1000.0) / 1000.0);
         }

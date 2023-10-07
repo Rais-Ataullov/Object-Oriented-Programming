@@ -136,6 +136,11 @@ class ArrayTabulatedFunctionTest {
         assertEquals(func1.getX(3),1);
         assertEquals(func1.getY(3),-2);
 
+        func1.insert(0,5.66);
+        assertEquals(func1.getX(2),0);
+        assertEquals(func1.getY(2),5.66);
+
+
     }
 
     @Test
