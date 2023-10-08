@@ -19,7 +19,6 @@ public class LinkedListTabulatedFunction extends AbstractTabulatedFunction imple
 
         @Override
         public int hashCode() {
-
             int hash = 16;
             int realX = (int)x;
             double floatX = (x - realX) * 1000;
@@ -275,5 +274,76 @@ public class LinkedListTabulatedFunction extends AbstractTabulatedFunction imple
             count--;
 
         }
+    }
+
+    @Override
+    public String toString() {
+        String result = "{ ";
+        Node curr = head;
+        int temp = count;
+        while(temp-- > 0){
+            result += curr.toString() + ' ';
+            curr = curr.next;
+        }
+        result += "}";
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o.getClass() == LinkedListTabulatedFunction.Node.class){
+            return this.equals((Node)o);
+        }
+        boolean result;
+        if (o.getClass() == LinkedListTabulatedFunction.class){
+            LinkedListTabulatedFunction obj = (LinkedListTabulatedFunction)o;
+            if (count != obj.count) return false;
+            int temp = count;
+            Node curr = head; Node currObj = obj.head;
+            while(temp-- > 0 && curr.equals(currObj)){
+                curr = curr.next;
+                currObj = currObj.next;
+            }
+            if (temp <= 0) return true; }
+        else if (o.getClass() == ArrayTabulatedFunction.class){
+            ArrayTabulatedFunction obj = (ArrayTabulatedFunction)o;
+            if (count != obj.count) return false;
+            Node curr = head;
+            int temp = count;
+            for(int i = 0; i < count && (curr.x == obj.getX(i) &&
+                    curr.y == obj.getY(i)); i++)
+            {
+                curr = curr.next; temp--;
+            }
+            if (temp <= 0) return true;
+        }
+        return false;
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 24;
+        Node curr = head;
+        int temp = count;
+        while(temp-- > 0){
+            hash = hash + curr.hashCode();
+        }
+        return hash;
+    }
+
+    @Override
+    public Object clone(){
+
+        double[] arrayOfX = new double[count];
+        double[] arrayOfY = new double[count];
+        Node curr = head;
+        for(int i = 0; i < count; i++){
+            arrayOfX[i] = curr.x;
+            arrayOfY[i] = curr.y;
+            curr = curr.next;
+        }
+
+        LinkedListTabulatedFunction clone = new LinkedListTabulatedFunction(arrayOfX, arrayOfY);
+        return clone;
     }
 }

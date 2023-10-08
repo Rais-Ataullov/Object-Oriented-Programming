@@ -246,6 +246,43 @@ class LinkedListTabulatedFunctionTest {
 
     }
 
+    double[] arrayOfX = {3, 4, 6};
+    double[] arrayOfY = {5, 2, -2};
+    LinkedListTabulatedFunction tabFunc = new LinkedListTabulatedFunction(arrayOfX, arrayOfY);
+
+
+    @Test
+    void toString_List(){
+        assertEquals("{ (3.0; 5.0) (4.0; 2.0) (6.0; -2.0) }",tabFunc.toString());
+    }
+
+    @Test
+    void equals_List(){
+
+        double[] arrayOfX2 = {3, 5, 6};
+        double[] arrayOfY2 = {5, 2, -2};
+
+        LinkedListTabulatedFunction tabFunc2 = new LinkedListTabulatedFunction(arrayOfX, arrayOfY);
+        ArrayTabulatedFunction tabFunc3 = new ArrayTabulatedFunction(arrayOfX2, arrayOfY2);
+        LinkedListTabulatedFunction.Node node = new LinkedListTabulatedFunction.Node();
+        node.x = 12; node.y = -6;
+
+        assertTrue(tabFunc.equals(tabFunc2));
+        assertFalse(tabFunc.equals(tabFunc3));
+        assertFalse(tabFunc.equals(node));
+    }
+
+    @Test
+    void hashCode_List(){
+        assertEquals(744,tabFunc.hashCode());
+    }
+    @Test
+    void clone_List(){
+
+        assertTrue(tabFunc.equals(tabFunc.clone()));
+
+    }
+
     @Test
     void toString_Node(){
         LinkedListTabulatedFunction.Node node = new LinkedListTabulatedFunction.Node();
@@ -281,4 +318,5 @@ class LinkedListTabulatedFunctionTest {
         LinkedListTabulatedFunction.Node clone = (LinkedListTabulatedFunction.Node)(node.clone());
         assertTrue(clone.equals(node));
     }
+
 }
