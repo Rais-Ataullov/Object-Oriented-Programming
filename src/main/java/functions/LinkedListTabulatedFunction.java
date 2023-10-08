@@ -3,11 +3,43 @@ package functions;
 public class LinkedListTabulatedFunction extends AbstractTabulatedFunction implements Insertable, Removable
 {
     static class Node {
-
         public Node next, prev;
         public double x, y;
 
+        @Override
+        public String toString() {
+            return "(" + x + "; " + y + ")";
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            return (o.getClass() == this.getClass() && ((((Node)o).x == x)
+                    && (((Node)o).y == y)));
+        }
+
+        @Override
+        public int hashCode() {
+
+            int hash = 16;
+            int realX = (int)x;
+            double floatX = (x - realX) * 1000;
+            hash = hash * realX + 23 * (int)floatX;
+
+            int realY = (int)y;
+            double floatY = (y - realY) * 1000;
+            hash = hash * realY + 23 * (int)floatY;
+            return hash;
+        }
+
+        @Override
+        public Object clone(){
+            Node clone = new Node();
+            clone.x = this.x; clone.y = this.y;
+            clone.prev = this.prev; clone.next = this.next;
+            return  clone;
+        }
     }
+
     private Node head;
 
     private void addNode(double x, double y){

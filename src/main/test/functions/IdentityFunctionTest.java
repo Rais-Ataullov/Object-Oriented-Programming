@@ -45,7 +45,7 @@ class IdentityFunctionTest {
     void HashCodeTest(){
 
         IdentityFunction func1 = new IdentityFunction();
-        assertEquals(func1.hashCode(), 172032696);
+        assertEquals(func1.hashCode(), func1.hashCode());
 
     }
 

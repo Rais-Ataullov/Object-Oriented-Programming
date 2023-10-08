@@ -245,4 +245,40 @@ class LinkedListTabulatedFunctionTest {
         assertEquals(Tab_Func.getY(0), 3.5);
 
     }
+
+    @Test
+    void toString_Node(){
+        LinkedListTabulatedFunction.Node node = new LinkedListTabulatedFunction.Node();
+        node.x = 4; node.y = 7;
+        assertEquals("(4.0; 7.0)",node.toString());
+    }
+
+    @Test
+    void equals_Node(){
+
+        LinkedListTabulatedFunction.Node node1 = new LinkedListTabulatedFunction.Node();
+        node1.x = 2; node1.y = 5;
+        LinkedListTabulatedFunction.Node node2 = new LinkedListTabulatedFunction.Node();
+        node2.x = 2.0; node2.y = 5.0;
+        assertTrue(node1.equals(node2));
+
+        NaturalLogarithm lnFun = new NaturalLogarithm();
+        assertFalse(node1.equals(lnFun));
+    }
+
+    @Test
+    void hashCode_Node(){
+        LinkedListTabulatedFunction.Node node = new LinkedListTabulatedFunction.Node();
+        node.x = 13.6; node.y = 57.4;
+        assertEquals(806322,node.hashCode());
+    }
+    @Test
+    void clone_Node(){
+
+        LinkedListTabulatedFunction.Node node = new LinkedListTabulatedFunction.Node();
+        node.x = 13.6; node.y = 57.4; node.next = node.prev = null;
+
+        LinkedListTabulatedFunction.Node clone = (LinkedListTabulatedFunction.Node)(node.clone());
+        assertTrue(clone.equals(node));
+    }
 }
