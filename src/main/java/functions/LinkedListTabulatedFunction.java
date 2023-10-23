@@ -1,4 +1,5 @@
 package functions;
+import java.lang.IllegalArgumentException;
 
 public class LinkedListTabulatedFunction extends AbstractTabulatedFunction implements Insertable, Removable
 {
@@ -61,11 +62,17 @@ public class LinkedListTabulatedFunction extends AbstractTabulatedFunction imple
         count++;
     }
     public LinkedListTabulatedFunction(double[] xValues, double[] yValues) {
+        if (xValues.length < 2 || yValues.length != xValues.length)
+            throw new IllegalArgumentException("The length is less than min");
+
         for (int i = 0; i < xValues.length; i++){
             this.addNode(xValues[i],yValues[i]);
         }
     }
     public LinkedListTabulatedFunction(MathFunction source, double xFrom, double xTo, int count){
+        if (count < 2)
+            throw new IllegalArgumentException("The length is less than min");
+
         if(xFrom == xTo){
             double source_val = Math.round(source.apply(xFrom) * 1000.0) / 1000.0;
             while (count-- > 0) {
@@ -104,9 +111,21 @@ public class LinkedListTabulatedFunction extends AbstractTabulatedFunction imple
     public int getCount() {
         return count;
     }
-    public double getX(int index){ return getNode(index).x; };
-    public double getY(int index){ return getNode(index).y; };
-    public void setY(int index, double value){ getNode(index).y = value; };
+
+    public double getX(int index){
+        if(index < 0 || index >= getCount()) throw new IllegalArgumentException();
+        return getNode(index).x;
+    };
+
+    public double getY(int index){
+        if(index < 0 || index >= getCount()) throw new IllegalArgumentException();
+        return getNode(index).y;
+    };
+
+    public void setY(int index, double value){
+        if(index < 0 || index >= getCount()) throw new IllegalArgumentException();
+        getNode(index).y = value;
+    };
     public int indexOfX(double x){
         if (x < this.leftBound() || x > this.rightBound() ) return -1;
         int index = 0;
@@ -130,7 +149,10 @@ public class LinkedListTabulatedFunction extends AbstractTabulatedFunction imple
 
     // Методы из AbstractTabulatedFunction
     protected int floorIndexOfX(double x){
-        if (x > this.rightBound()) return count-1;
+
+        if (x < leftBound()) throw new IllegalArgumentException();
+        if (x > this.rightBound()) return count - 1;
+
         int index = 0;
         while (getX(index) < x){
             index++; }
@@ -139,7 +161,9 @@ public class LinkedListTabulatedFunction extends AbstractTabulatedFunction imple
     };
 
 
-    private Node floorNodeOfX(double x){
+    protected Node floorNodeOfX(double x){
+
+        if (x < leftBound()) throw new IllegalArgumentException();
         if (x > this.rightBound()) return head.prev;
 
         Node currNode = head;
@@ -150,7 +174,7 @@ public class LinkedListTabulatedFunction extends AbstractTabulatedFunction imple
 
 
     protected double extrapolateLeft(double x){
-        if (count == 1) return head.y;
+
         double newY = head.y + (((head.next).y - head.y)/((head.next).x - head.x)) * (x - head.x);
         newY = Math.round(newY * 1000.0) / 1000.0;
 
@@ -161,7 +185,7 @@ public class LinkedListTabulatedFunction extends AbstractTabulatedFunction imple
 
 
     protected double extrapolateRight(double x){
-        if (count == 1) return head.y;
+
         Node penultimate = (head.prev).prev;
         Node last = head.prev;
         double newY = penultimate.y + ((last.y - penultimate.y)/(last.x - penultimate.x))
@@ -175,7 +199,6 @@ public class LinkedListTabulatedFunction extends AbstractTabulatedFunction imple
 
     protected double interpolate(double x, int floorIndex){
 
-        if (count == 1) return head.y;
         double y_floor = getY(floorIndex);
         double x_floor = getX(floorIndex);
         double newY = y_floor + ((getY(floorIndex + 1) - y_floor)/
@@ -194,7 +217,7 @@ public class LinkedListTabulatedFunction extends AbstractTabulatedFunction imple
 
 
     protected double interpolate(double x, double leftX, double rightX, double leftY, double rightY){
-        if (count == 1) return head.y;
+
         double newY = leftY + ((rightY - leftY)/ (rightX - leftX)) * (x - leftX);
         newY = Math.round(newY * 1000.0) / 1000.0;
 
@@ -210,6 +233,7 @@ public class LinkedListTabulatedFunction extends AbstractTabulatedFunction imple
 
 
     public double apply(double x) {
+
         double result;
         if (x < this.leftBound()) result = this.extrapolateLeft(x);
         else if(x > this.rightBound()) result = this.extrapolateRight(x);
@@ -224,6 +248,7 @@ public class LinkedListTabulatedFunction extends AbstractTabulatedFunction imple
 
     @Override
     public void insert(double x, double y) {
+
         if (count == 0) this.addNode(x,y);
         else {
             if (x < leftBound()){
@@ -237,7 +262,6 @@ public class LinkedListTabulatedFunction extends AbstractTabulatedFunction imple
             else{
 
                 int ind = indexOfX(x);
-
                 if(ind > 0){ this.setY(ind, y);}
 
                 else {
@@ -260,8 +284,8 @@ public class LinkedListTabulatedFunction extends AbstractTabulatedFunction imple
 
     @Override
     public void remove(int index) {
-        if (count > 0 ){
 
+        if (count > 0){
             if (index == 0) head = head.next;
 
             Node removeNode = getNode(index);

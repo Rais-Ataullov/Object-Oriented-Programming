@@ -1,5 +1,6 @@
 package functions;
 
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -319,4 +320,66 @@ class LinkedListTabulatedFunctionTest {
         assertTrue(clone.equals(node));
     }
 
+    @Test
+    void testException(){
+
+        {
+            IllegalArgumentException thrown = assertThrows(IllegalArgumentException.class, () ->
+            {
+                double[] arrX = {1, 2};
+                double[] arrY = {1, 2, 3};
+                LinkedListTabulatedFunction tabFunc = new LinkedListTabulatedFunction(arrX, arrY); });
+            Assertions.assertEquals("The length is less than min", thrown.getMessage());
+
+            thrown = assertThrows(IllegalArgumentException.class, () ->
+            {
+                LinkedListTabulatedFunction tabFunc = new LinkedListTabulatedFunction(source, xFrom, xTo, 1); });
+            Assertions.assertEquals("The length is less than min", thrown.getMessage());
+        }
+
+
+        boolean exceptionThrown = false;
+        double[] arrX = {1, 2, 4};
+        double[] arrY = {10, 12, 3};
+        LinkedListTabulatedFunction tabFunc = new LinkedListTabulatedFunction(arrX, arrY);
+        {
+            try{ tabFunc.getX(5); } catch (IllegalArgumentException exc) {
+                exceptionThrown = true;
+            }
+            assertTrue(exceptionThrown);
+            exceptionThrown = false;
+
+            try{ tabFunc.getY(5); } catch (IllegalArgumentException exc) {
+                exceptionThrown = true;
+            }
+            assertTrue(exceptionThrown);
+            exceptionThrown = false;
+
+            try{ tabFunc.getX(5); } catch (IllegalArgumentException exc) {
+                exceptionThrown = true;
+            }
+            assertTrue(exceptionThrown);
+            exceptionThrown = false;
+
+            try{ tabFunc.setY(5, 23); } catch (IllegalArgumentException exc) {
+                exceptionThrown = true;
+            }
+            assertTrue(exceptionThrown);
+            exceptionThrown = false;
+
+            try{ tabFunc.floorIndexOfX(0); } catch (IllegalArgumentException exc) {
+                exceptionThrown = true;
+            }
+            assertTrue(exceptionThrown);
+            exceptionThrown = false;
+
+            try{ tabFunc.floorNodeOfX(0); } catch (IllegalArgumentException exc) {
+                exceptionThrown = true;
+            }
+            assertTrue(exceptionThrown);
+            exceptionThrown = false;
+        }
+
+
+    }
 }
