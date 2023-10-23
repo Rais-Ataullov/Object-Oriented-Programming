@@ -278,12 +278,21 @@ public class ArrayTabulatedFunction extends AbstractTabulatedFunction implements
     }
 
     @Override
-    public boolean equals(Object o){
+    public boolean equals(Object o) {
 
-        return this.getClass() == o.getClass() &&
-                Arrays.equals(((ArrayTabulatedFunction) o).arrayOfX, arrayOfX) &&
-                Arrays.equals(((ArrayTabulatedFunction) o).arrayOfY, arrayOfY);
+        if (o instanceof TabulatedFunction) {
 
+            TabulatedFunction newO = (TabulatedFunction) o;
+
+            if (newO.getCount() == this.getCount()) {
+
+                for (int i = 0; i < this.count; i++) {
+                    if (newO.getX(i) != this.getX(i) || (newO.getY(i) != this.getY(i))) return false;
+                }
+                return true;
+            }
+        }
+        return false;
     }
 
     @Override
